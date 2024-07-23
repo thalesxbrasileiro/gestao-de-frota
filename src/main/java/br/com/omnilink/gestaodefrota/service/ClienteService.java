@@ -9,6 +9,7 @@ import br.com.omnilink.gestaodefrota.repository.ClienteRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class ClienteService {
         this.objectMapper = objectMapper;
     }
 
+	@Transactional
     public ClienteResponseDTO criar(ClienteRequestDTO clienteRequestDTO) {
         ClienteEntity clienteEntity = objectMapper.convertValue(clienteRequestDTO, ClienteEntity.class);
         ClienteResponseDTO clienteResponseDTO = objectMapper.convertValue(ClienteRepository.save(clienteEntity), ClienteResponseDTO.class);
@@ -83,6 +85,7 @@ public class ClienteService {
 		return objectMapper.convertValue(clienteEntity, ClienteResponseDTO.class);
 	}
 
+	@Transactional
     public ClienteResponseDTO atualizar(Integer id, ClienteRequestDTO clienteRequestDTO) {
         log.info("Atualizando cliente por id: {}", id);
 		if (id <= 0) {
@@ -102,6 +105,7 @@ public class ClienteService {
         return objectMapper.convertValue(ClienteRepository.save(clienteEntity), ClienteResponseDTO.class);
     }
 
+	@Transactional
 	public void deletar(Integer id) {
 		log.info("Deletando cliente por id: {}", id);
 

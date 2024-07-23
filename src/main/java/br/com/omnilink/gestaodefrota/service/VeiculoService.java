@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ public class VeiculoService {
         this.ClienteRepository = ClienteRepository;
     }
 
+	@Transactional
     public VeiculoResponseDTO criar(VeiculoRequestDTO veiculoRequestDTO) {
         ClienteEntity clienteEntity = ClienteRepository.findById(veiculoRequestDTO.getClienteId())
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + veiculoRequestDTO.getClienteId()));
@@ -61,6 +63,7 @@ public class VeiculoService {
 		return veiculoResponseDTO;
 	}
 
+	@Transactional
     public VeiculoResponseDTO atualizar(Integer id, VeiculoRequestDTO veiculoRequestDTO) {
         log.info("Atualizando veículo por id: {}", id);
         VeiculoEntity veiculo = VeiculoRepository.findById(id).orElseThrow(() -> new VeiculoNotFoundException("Veículo não encontrado com o ID: " + id));
@@ -79,6 +82,7 @@ public class VeiculoService {
         return objectMapper.convertValue(VeiculoRepository.save(veiculo), VeiculoResponseDTO.class);
     }
 
+	@Transactional
 	public void deletar(Integer id) {
 		log.info("Deletando veículo por id: {}", id);
 
