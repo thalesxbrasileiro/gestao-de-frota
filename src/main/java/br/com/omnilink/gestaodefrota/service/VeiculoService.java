@@ -41,7 +41,7 @@ public class VeiculoService {
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + veiculoRequestDTO.getClienteId()));
 
         VeiculoEntity veiculoEntity = objectMapper.convertValue(veiculoRequestDTO, VeiculoEntity.class);
-        veiculoEntity.setCliente(clienteEntity); // Associando o cliente ao veículo
+        veiculoEntity.setCliente(clienteEntity);
 
         VeiculoResponseDTO veiculoResponseDTO = objectMapper.convertValue(VeiculoRepository.save(veiculoEntity), VeiculoResponseDTO.class);
         log.info("Veículo <{}> adicionado com sucesso!", veiculoResponseDTO.getPlaca());
