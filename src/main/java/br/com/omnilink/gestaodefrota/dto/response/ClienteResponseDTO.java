@@ -1,8 +1,9 @@
 package br.com.omnilink.gestaodefrota.dto.response;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ClienteResponseDTO {
+public class ClienteResponseDTO implements Serializable {
 
     private Integer id;
     private String nome;

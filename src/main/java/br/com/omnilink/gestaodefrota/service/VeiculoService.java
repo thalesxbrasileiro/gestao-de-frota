@@ -11,6 +11,9 @@ import br.com.omnilink.gestaodefrota.repository.VeiculoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +35,7 @@ public class VeiculoService {
     }
 
 	@Transactional
+	@CacheEvict(value = {"veiculos", "clientes"}, allEntries = true)
     public VeiculoResponseDTO criar(VeiculoRequestDTO veiculoRequestDTO) {
         ClienteEntity clienteEntity = ClienteRepository.findById(veiculoRequestDTO.getClienteId())
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + veiculoRequestDTO.getClienteId()));
@@ -44,6 +48,7 @@ public class VeiculoService {
         return veiculoResponseDTO;
     }
 
+	@CacheEvict(value = "veiculos", allEntries = true)
     public List<VeiculoResponseDTO> listarTodos() {
         log.info("Listando todos os veículos...");
         List<VeiculoEntity> veiculoEntity = VeiculoRepository.findAll();
@@ -55,6 +60,7 @@ public class VeiculoService {
         return veiculoResponseDTO;
     }
 
+	@Cacheable("veiculos")
 	public VeiculoResponseDTO buscarPorId(Integer id) {
 		log.info("Buscando veículo por id: {}", id);
 		VeiculoEntity veiculoEntity = VeiculoRepository.findById(id).orElseThrow(() -> new VeiculoNotFoundException("Veículo não encontrado com o ID: " + id));
@@ -63,6 +69,7 @@ public class VeiculoService {
 		return veiculoResponseDTO;
 	}
 
+	@CachePut(value = "veiculos", key = "#id")
 	@Transactional
     public VeiculoResponseDTO atualizar(Integer id, VeiculoRequestDTO veiculoRequestDTO) {
         log.info("Atualizando veículo por id: {}", id);
@@ -77,11 +84,13 @@ public class VeiculoService {
         veiculo.setCor(veiculoRequestDTO.getCor());
         veiculo.setPlaca(veiculoRequestDTO.getPlaca());
 		veiculo.setCliente(cliente);
+		VeiculoEntity veiculoAtualizado = VeiculoRepository.save(veiculo);
 		log.info("Veículo de placa {} atualizado com sucesso!", veiculo.getPlaca());
 
-        return objectMapper.convertValue(VeiculoRepository.save(veiculo), VeiculoResponseDTO.class);
+        return objectMapper.convertValue(veiculoAtualizado, VeiculoResponseDTO.class);
     }
 
+	@CacheEvict(value = "veiculos", key = "#id")
 	@Transactional
 	public void deletar(Integer id) {
 		log.info("Deletando veículo por id: {}", id);

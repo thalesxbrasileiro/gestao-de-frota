@@ -1,6 +1,8 @@
 package br.com.omnilink.gestaodefrota.dto.response;
 
-public class VeiculoResponseDTO {
+import java.io.Serializable;
+
+public class VeiculoResponseDTO implements Serializable {
 
     private Integer id;
     private String marca;

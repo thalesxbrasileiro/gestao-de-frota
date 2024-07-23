@@ -3,9 +3,11 @@ package br.com.omnilink.gestaodefrota.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "VEICULO")
-public class VeiculoEntity {
+public class VeiculoEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,12 +2,13 @@ package br.com.omnilink.gestaodefrota.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "CLIENTE")
-public class ClienteEntity {
+public class ClienteEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
